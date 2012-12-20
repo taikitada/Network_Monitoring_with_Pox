@@ -1,5 +1,6 @@
 #
 #
+#  python monitoring_agent.py -ms server_IP:port -pm server:port -sw openvswitch_switch_name -nd netperf_dir
 #
 #
 #

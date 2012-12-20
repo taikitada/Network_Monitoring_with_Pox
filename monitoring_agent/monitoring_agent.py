@@ -1,5 +1,4 @@
 #
-#
 #  python monitoring_agent.py -ms server_IP:port -pm server:port -sw openvswitch_switch_name -nd netperf_dir
 #
 #
@@ -33,9 +32,15 @@ class monitoring_agent:
 	def sample(self):
 		return 1111
 
-	def show_slices(self, server_ip_addr, server_port):
+	def show_slices(self):
+		return monitoring_server.show_registerd_slices()
 
-		return
+	def add_slice(self, slice_name):
+		monitoring_server.register_slice(slice_name)
+
+	def add_mac_to_slice(self, mac_addr, slice_name):
+		monitoring_server(mac_addr, slice_name)
+
 
 class RequestHandler(SimpleXMLRPCRequestHandler):
 	def __init__(self, request, client_address, server):

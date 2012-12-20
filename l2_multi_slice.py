@@ -189,7 +189,6 @@ class Switch (EventMixin):
   def _install_path (self, p, match, buffer_id = -1):
     for sw,port in p[1:]:
       self._install(sw, port, match)
-
     self._install(p[0][0], p[0][1], match, buffer_id)
 
     """

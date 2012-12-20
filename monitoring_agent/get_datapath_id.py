@@ -1,4 +1,5 @@
 import subprocess
+import sys
 
 def get_datapath_id(bridge):
 
@@ -8,7 +9,8 @@ def get_datapath_id(bridge):
 
         return_code = svr_ps.wait()
         if return_code == 1:
-                return bridge + " is not found"
+                print bridge + " is not found or Faild sudo authentication"
+                sys.exit()
         else: # sucessfull execute command
                 output_data = []
                 while True:

@@ -47,7 +47,7 @@ switches = {}
 mac_map = {}
 
 # ADD by tada
-# slice _name -> [mac_addr1, mac_adddr2, ...]
+# mac_addr1 -> slice_name, mac_adddr2->slice_name, ...
 import sqlite3
 slice_map = {}
 

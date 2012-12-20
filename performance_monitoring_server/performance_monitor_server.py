@@ -83,6 +83,10 @@ class Performance_Monotoring:
 				(changed_to_dict[a]).update({b:c})
 		return changed_to_dict
 
+	def show_registerd_slices(self):
+		# return to list of keys
+		return slice_map.keys()
+
 """
 get client address
 

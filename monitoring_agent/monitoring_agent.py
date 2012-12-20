@@ -14,7 +14,7 @@ import xmlrpclib
 import argparse
 
 parser = argparse.ArgumentParser(description='sample argument')
-parser.add_argument('-ms', type=str, dest='monitoring_server', required=True, help='server_IP:port_num')
+parser.add_argument('-ma', type=str, dest='monitoring_agent', required=True, help='server_IP:port_num')
 parser.add_argument('-pm', type=str, dest='perfomance_manager', required=True, help='server_IP:port_num')
 parser.add_argument('-sw', type=str, dest='switch', required=True, help='switch_name')
 parser.add_argument('-nd', type=str, dest='netperf_dir', required=True, help='write your netperf directory')
@@ -43,8 +43,8 @@ class RequestHandler(SimpleXMLRPCRequestHandler):
 		SimpleXMLRPCRequestHandler.__init__(self, request, client_address, server)
 
 if __name__ == '__main__':
-	server_ip_addr = (args.monitoring_server.split(":"))[0]
-	server_port = (args.monitoring_server.split(":"))[1]
+	server_ip_addr = (args.monitoring_agent.split(":"))[0]
+	server_port = (args.monitoring_agent.split(":"))[1]
 	manager_ip_addr = (args.perfomance_manager.split(":"))[0]
 	manager_port = (args.perfomance_manager.split(":"))[1]
 	switch_dpid = datapath_id_for_pox(args.switch)

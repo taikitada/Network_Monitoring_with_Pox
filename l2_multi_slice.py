@@ -61,7 +61,7 @@ def _calc_paths ():
   ####### CHANGED PART ########
   # access monitoring server and get distance_map
   import xmlrpclib
-  # TODO change the Server IP and Port to the command line option 
+  # TODO change the Server IP and Port to the command line option
   monitoring_server = xmlrpclib.ServerProxy("http://133.1.134.225:8000")
   distance_map = monitoring_server.request_link_distance()
   ##############################
@@ -309,6 +309,13 @@ class Switch (EventMixin):
       flood()
     else:
       if packet.dst not in mac_map:
+          #TODO
+          #if slice_map[packet.dst] == slice_map[packet.src]:
+          #   log.debug("%s different slice -- drop" % (packet.dst,))
+          #   drop()
+          #else:
+          #   flood()
+          #
         log.debug("%s unknown -- flooding" % (packet.dst,))
         flood()
       else:

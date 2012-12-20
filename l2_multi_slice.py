@@ -33,7 +33,7 @@ from pox.lib.util import dpidToStr
 
 
 
- = core.getLogger()
+log = core.getLogger()
 
 # Adjacency map.  [sw1][sw2] -> port from sw1 to sw2
 # adjacency[sw1][sw2] -> port_number
@@ -195,6 +195,7 @@ class Switch (EventMixin):
     """
 
     Path is installed and raise Event
+
     """
 
     core.l2_multi.raiseEvent(PathInstalled(p))
@@ -372,7 +373,7 @@ class l2_multi (EventMixin):
     ## delete all flows of all switch
     clear = of.ofp_flow_mod(match=of.ofp_match(),command=of.OFPFC_DELETE)
     for sw in switches.itervalues():
-      sw.connection.send(clear)  
+      sw.connection.send(clear)
     path_map.clear() # clear method for dictionary
 
     if event.removed:
@@ -433,6 +434,5 @@ def launch ():
   if 'openflow_discovery' not in core.components:
     import pox.openflow.discovery as discovery
     core.registerNew(discovery.Discovery)
-    
   core.registerNew(l2_multi)
 

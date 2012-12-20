@@ -22,7 +22,7 @@ LEVELS = {'debug': logging.DEBUG,
 
 import argparse
 parser = argparse.ArgumentParser(description='sample argument')
-parser.add_argument('-pm', type=str, dest='perfomance_mamager')
+parser.add_argument('-pm', type=str, required=True, dest='perfomance_mamager')
 args = parser.parse_args()
 
 # [k.dpid][j.dpid]->distance

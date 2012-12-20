@@ -57,7 +57,6 @@ path_map = defaultdict(lambda:defaultdict(lambda:(None,None)))
 
 
 def _calc_paths ():
-  
   ####### CHANGED PART ########
   # access monitoring server and get distance_map
   import xmlrpclib
@@ -80,7 +79,6 @@ def _calc_paths ():
       ####### CHANGED PART #############
       k_dpid = (dpidToStr(k.dpid)).replace("-","")
       j_dpid = (dpidToStr(j.dpid)).replace("-","")
-      
       if j_dpid not in distance_map[k_dpid]:
         path_distance = distance_map[j_dpid][k_dpid]
       else:
@@ -110,13 +108,11 @@ def _calc_paths ():
               # i -> k -> j is better than existing
               path_map[i][j] = (ikj_dist, k)
 
-  
   print "--------------------"
   for i in sws:
     for j in sws:
       print path_map[i][j][0],
     print
-  
 
 
 def _get_raw_path (src, dst):
@@ -199,7 +195,6 @@ class Switch (EventMixin):
     """
 
     Path is installed and raise Event
-    
     """
 
     core.l2_multi.raiseEvent(PathInstalled(p))

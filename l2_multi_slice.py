@@ -323,8 +323,13 @@ class Switch (EventMixin):
           #else:
           #   flood()
           #
-        log.debug("%s unknown -- flooding" % (packet.dst,))
-        flood()
+        if packet.dst == "2a:cd:6b:48:b2:e6":
+          log.debug("%s different slice -- drop" % (packet.dst,))
+          drop()
+        
+        else:  
+          log.debug("%s unknown -- flooding" % (packet.dst,))
+          flood()
       else:
         dest = mac_map[packet.dst]
         #print packet.dst, "is on", dest

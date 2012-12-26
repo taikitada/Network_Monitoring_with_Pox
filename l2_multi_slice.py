@@ -61,10 +61,11 @@ FLOOD_HOLDDOWN = 5
 def _calc_paths ():
   ####### CHANGED PART ########
   # access monitoring server and get distance_map
-  import xmlrpclib
+  if monitoring == True:
+    import xmlrpclib
   # TODO change the Server IP and Port to the command line option
-  monitoring_server = xmlrpclib.ServerProxy("http://133.1.134.225:8000")
-  distance_map = monitoring_server.request_link_distance()
+    monitoring_server = xmlrpclib.ServerProxy("http://133.1.134.225:8000")
+    distance_map = monitoring_server.request_link_distance()
   ##############################
 
   """
@@ -78,16 +79,19 @@ def _calc_paths ():
     # pick up the [sw1][sw2] , port_number
     for j,port in adjacency[k].iteritems():
       if port is None: continue
+      if monitoring = True:
       ####### CHANGED PART #############
-      k_dpid = (dpidToStr(k.dpid)).replace("-","")
-      j_dpid = (dpidToStr(j.dpid)).replace("-","")
-      if j_dpid not in distance_map[k_dpid]:
-        path_distance = distance_map[j_dpid][k_dpid]
-      else:
-        path_distance = distance_map[k_dpid][j_dpid]
-      path_map[k][j] = (path_distance, None)
+        k_dpid = (dpidToStr(k.dpid)).replace("-","")
+        j_dpid = (dpidToStr(j.dpid)).replace("-","")
+        if j_dpid not in distance_map[k_dpid]:
+          path_distance = distance_map[j_dpid][k_dpid]
+        else:
+          path_distance = distance_map[k_dpid][j_dpid]
+        path_map[k][j] = (path_distance, None)
       ####################################
-  path_map[k][k] = (0,None) # distance, intermediate
+      else:
+        if phys_slice == True: path_map[k][j] = (1,None)
+    path_map[k][k] = (0,None) # distance, intermediate
 
   """
   for i in sws:
@@ -109,13 +113,13 @@ def _calc_paths ():
             if path_map[i][j][0] is None or ikj_dist < path_map[i][j][0]:
               # i -> k -> j is better than existing
               path_map[i][j] = (ikj_dist, k)
-
+  """
   print "--------------------"
   for i in sws:
     for j in sws:
       print path_map[i][j][0],
     print
-
+ """
 
 def _get_raw_path (src, dst):
   if len(path_map) == 0: _calc_paths()
@@ -443,7 +447,7 @@ class l2_multi (EventMixin):
     else:
       sw.connect(event.connection)
 
-def launch ():
+def launch (phys_slice=True, monitoring=False):
   if 'openflow_discovery' not in core.components:
     import pox.openflow.discovery as discovery
     core.registerNew(discovery.Discovery)

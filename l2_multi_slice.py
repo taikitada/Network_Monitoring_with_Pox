@@ -343,6 +343,7 @@ class Switch (EventMixin):
     log.debug("Connect %s" % (connection,))
     self.connection = connection
     self._listeners = self.listenTo(connection)
+    self._connected_at = time.time()
 
   @property
   def is_holding_down (self):

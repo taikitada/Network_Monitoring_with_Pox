@@ -316,23 +316,17 @@ class Switch (EventMixin):
       flood()
     else:
       if packet.dst not in mac_map:
-          #TODO
-          #if slice_map[packet.dst] == slice_map[packet.src]:
-          #   log.debug("%s different slice -- drop" % (packet.dst,))
-          #   drop()
-          #else:
-          #   flood()
-          #
-        if packet.dst == "2a:cd:6b:48:b2:e6":
-          log.debug("%s different slice -- drop" % (packet.dst,))
-          drop()
-        
-        else:  
           log.debug("%s unknown -- flooding" % (packet.dst,))
           flood()
       else:
         dest = mac_map[packet.dst]
         #print packet.dst, "is on", dest
+        #TODO
+          #if slice_map[packet.dst] == slice_map[packet.src]:
+          #   log.debug("%s different slice -- drop" % (packet.dst,))
+          #   drop()
+          #   return
+
         match = of.ofp_match.from_packet(packet)
         self.install_path(dest[0], dest[1], match, event)
 

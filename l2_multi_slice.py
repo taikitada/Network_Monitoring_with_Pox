@@ -33,7 +33,7 @@ from pox.lib.util import dpidToStr
 
 
 
- = core.getLogger()
+log = core.getLogger()
 
 # Adjacency map.  [sw1][sw2] -> port from sw1 to sw2
 # adjacency[sw1][sw2] -> port_number
@@ -47,7 +47,7 @@ switches = {}
 mac_map = {}
 
 # ADD by tada
-# slice _name -> [mac_addr1, mac_adddr2, ...]
+# mac_addr1 -> slice_name, mac_adddr2->slice_name, ...
 import sqlite3
 slice_map = {}
 
@@ -57,11 +57,10 @@ path_map = defaultdict(lambda:defaultdict(lambda:(None,None)))
 
 
 def _calc_paths ():
-  
   ####### CHANGED PART ########
   # access monitoring server and get distance_map
   import xmlrpclib
-  # TODO change the Server IP and Port to the command line option 
+  # TODO change the Server IP and Port to the command line option
   monitoring_server = xmlrpclib.ServerProxy("http://133.1.134.225:8000")
   distance_map = monitoring_server.request_link_distance()
   ##############################
@@ -80,7 +79,6 @@ def _calc_paths ():
       ####### CHANGED PART #############
       k_dpid = (dpidToStr(k.dpid)).replace("-","")
       j_dpid = (dpidToStr(j.dpid)).replace("-","")
-      
       if j_dpid not in distance_map[k_dpid]:
         path_distance = distance_map[j_dpid][k_dpid]
       else:
@@ -110,13 +108,11 @@ def _calc_paths ():
               # i -> k -> j is better than existing
               path_map[i][j] = (ikj_dist, k)
 
-  
   print "--------------------"
   for i in sws:
     for j in sws:
       print path_map[i][j][0],
     print
-  
 
 
 def _get_raw_path (src, dst):
@@ -193,13 +189,12 @@ class Switch (EventMixin):
   def _install_path (self, p, match, buffer_id = -1):
     for sw,port in p[1:]:
       self._install(sw, port, match)
-
     self._install(p[0][0], p[0][1], match, buffer_id)
 
     """
 
     Path is installed and raise Event
-    
+
     """
 
     core.l2_multi.raiseEvent(PathInstalled(p))
@@ -309,6 +304,13 @@ class Switch (EventMixin):
       flood()
     else:
       if packet.dst not in mac_map:
+          #TODO
+          #if slice_map[packet.dst] == slice_map[packet.src]:
+          #   log.debug("%s different slice -- drop" % (packet.dst,))
+          #   drop()
+          #else:
+          #   flood()
+          #
         log.debug("%s unknown -- flooding" % (packet.dst,))
         flood()
       else:
@@ -370,7 +372,7 @@ class l2_multi (EventMixin):
     ## delete all flows of all switch
     clear = of.ofp_flow_mod(match=of.ofp_match(),command=of.OFPFC_DELETE)
     for sw in switches.itervalues():
-      sw.connection.send(clear)  
+      sw.connection.send(clear)
     path_map.clear() # clear method for dictionary
 
     if event.removed:
@@ -431,6 +433,5 @@ def launch ():
   if 'openflow_discovery' not in core.components:
     import pox.openflow.discovery as discovery
     core.registerNew(discovery.Discovery)
-    
   core.registerNew(l2_multi)
 

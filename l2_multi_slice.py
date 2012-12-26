@@ -79,7 +79,7 @@ def _calc_paths ():
     # pick up the [sw1][sw2] , port_number
     for j,port in adjacency[k].iteritems():
       if port is None: continue
-      if monitoring = True:
+      if monitoring == True:
       ####### CHANGED PART #############
         k_dpid = (dpidToStr(k.dpid)).replace("-","")
         j_dpid = (dpidToStr(j.dpid)).replace("-","")

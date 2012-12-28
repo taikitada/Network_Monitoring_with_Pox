@@ -57,6 +57,8 @@ path_map = defaultdict(lambda:defaultdict(lambda:(None,None)))
 # Time to not flood in seconds
 FLOOD_HOLDDOWN = 5
 
+MONITORING_RESULT_GET_CYCLE = 5.0
+
 phys_slice = True
 monitoring = False
 

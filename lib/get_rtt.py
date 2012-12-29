@@ -1,7 +1,6 @@
 import subprocess
 import re
 
-
 def get_rtt(dest_host):
 	cmd = "ping " + dest_host
 	svr_ps = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, close_fds=True)

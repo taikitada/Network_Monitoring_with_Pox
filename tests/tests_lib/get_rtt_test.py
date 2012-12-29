@@ -16,6 +16,7 @@ class Get_rttTestCase(unittest.TestCase):
         pass
 
     def test_get_rtt(self):
+        pass
 
-if __name__ = "__main__":
+if __name__ == "__main__":
     unittest.main()

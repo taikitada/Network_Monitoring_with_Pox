@@ -4,12 +4,15 @@
 #
 #
 
-from get_rtt import get_rtt
+
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
-import sys
-from get_datapath_id import datapath_id_for_pox
 import xmlrpclib
+import sys
+
+from lib.get_datapath_id import datapath_id_for_pox
+from lib.get_rtt import get_rtt
+
 import argparse
 
 parser = argparse.ArgumentParser(description='sample argument')

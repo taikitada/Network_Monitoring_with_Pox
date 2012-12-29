@@ -8,10 +8,11 @@ import sys,os
 from os import path
 
 CURRENT_DIR=path.dirname(os.path.abspath(__file__))
-LIB_DIR = "../../lib"
-sys.path.append(CURRENT_DIR+'/'+LIB_DIR)
+#LIB_DIR = "../../lib"
+#sys.path.append(CURRENT_DIR+'/'+LIB_DIR)
+sys.path.append(CURRENT_DIR + '/' + "../../")
 
-from get_rtt import get_rtt
+from lib.get_rtt import get_rtt
 
 class Get_rttTestCase(unittest.TestCase):
 

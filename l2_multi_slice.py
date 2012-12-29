@@ -50,6 +50,9 @@ mac_map = {}
 import sqlite3
 slice_map = {}
 
+# slice_name -> rtt or throuput, monitoring
+slice_control = {}
+
 # [sw1][sw2] -> (distance, intermediate)
 # path_map[sw1][sw2] = (3, 4)
 path_map = defaultdict(lambda:defaultdict(lambda:(None,None)))
@@ -63,12 +66,12 @@ monitoring = False
 
 def _calc_paths ():
   ####### CHANGED PART ########
-  # access monitoring server and get distance_map
+  # access monitoring server and get rtt_map
   if monitoring == True:
     import xmlrpclib
   # TODO change the Server IP and Port to the command line option
     monitoring_server = xmlrpclib.ServerProxy("http://133.1.134.225:8000")
-    distance_map = monitoring_server.request_link_distance()
+    rtt_map = monitoring_server.request_rtt_info()
   ##############################
 
   """
@@ -86,10 +89,10 @@ def _calc_paths ():
       ####### CHANGED PART #############
         k_dpid = (dpidToStr(k.dpid)).replace("-","")
         j_dpid = (dpidToStr(j.dpid)).replace("-","")
-        if j_dpid not in distance_map[k_dpid]:
-          path_distance = distance_map[j_dpid][k_dpid]
+        if j_dpid not in rtt_map[k_dpid]:
+          path_distance = rtt_map[j_dpid][k_dpid]
         else:
-          path_distance = distance_map[k_dpid][j_dpid]
+          path_distance = rtt_map[k_dpid][j_dpid]
         path_map[k][j] = (path_distance, None)
       ####################################
       else:
@@ -126,6 +129,13 @@ def _calc_paths ():
 
 def _get_raw_path (src, dst):
   if len(path_map) == 0: _calc_paths()
+  ## if slice_map[src] != expnet &&  slice_map[dst] != expnet:
+  ##   _calc_monitoring_paths()
+  ##
+  ##
+  ##
+  ##
+
   if src is dst:
     # We're here!
     return []

@@ -28,7 +28,7 @@ args = parser.parse_args()
 # [k.dpid][j.dpid]->distance
 # overlapping is nothing
 # [switchA][switchB] or [switchA][switchB] is included
-link_distance = defaultdict(lambda:defaultdict(lambda:None))
+rtt_info = defaultdict(lambda:defaultdict(lambda:None))
 
 # switch_dpid -> (agent_ip, agent_port)
 agent_switch_map = {}
@@ -36,14 +36,14 @@ agent_switch_map = {}
 
 # get distance with datapath_id
 def get_distance_rtt(dpid_1, dpid_2):
-	agent_server = xmlrpclib.ServerProxy("http://" + agent_switch_map[dpid_2][0] + ":" + agent_switch_map[dpid_2][1])
-	return agent_server.get_rtt(agent_switch_map[dpid_1][0])
+	monitoring_agent = xmlrpclib.ServerProxy("http://" + agent_switch_map[dpid_2][0] + ":" + agent_switch_map[dpid_2][1])
+	return monitoring_agent.get_rtt(agent_switch_map[dpid_1][0])
 
 def get_bandwidth(dpid_1, dpid_2):
-	agent_server_1 = xmlrpclib.ServerProxy("http://" + agent_switch_map[dpid_1][0] + ":" + agent_switch_map[dpid_1][1])
-	agent_server_2 = xmlrpclib.ServerProxy("http://" + agent_switch_map[dpid_2][0] + ":" + agent_switch_map[dpid_2][1])
-	agent_server_2.start_server()
-	return agent_server_1.get_bandwidth()
+	monitoring_agent_1 = xmlrpclib.ServerProxy("http://" + agent_switch_map[dpid_1][0] + ":" + agent_switch_map[dpid_1][1])
+	monitoring_agent_2 = xmlrpclib.ServerProxy("http://" + agent_switch_map[dpid_2][0] + ":" + agent_switch_map[dpid_2][1])
+	monitoring_agent_2.start_server()
+	return monitoring_agent_1.get_bandwidth()
 
 class Performance_Monotoring:
 	def __init__(self):
@@ -52,37 +52,44 @@ class Performance_Monotoring:
 	def register_agent(self, server_ip, server_port, switch_dpid):
 		agent_switch_map[switch_dpid] = (server_ip,server_port)
 		print agent_switch_map
-		if switch_dpid not in link_distance.keys():
-			if link_distance.keys() == []:
-				link_distance[switch_dpid] = {}
+		if switch_dpid not in rtt_info.keys():
+			if rtt_info.keys() == []:
+				rtt_info[switch_dpid] = {}
 			else:
-				for registered_switch in link_distance.keys():
+				for registered_switch in rtt_info.keys():
 					distance = get_distance_rtt(switch_dpid, registered_switch)
 					print switch_dpid, registered_switch, distance
 					distance_for_pox = int(distance*1000)
-					link_distance[switch_dpid][registered_switch] = distance_for_pox
-					print link_distance
+					rtt_info[switch_dpid][registered_switch] = distance_for_pox
+					print rtt_info
 			return "Registerd you"
 
 		else:
 			return "You already registerd"
 
+	# this is not used
 	def request_distance(self, switchA, switchB):
 		print switchA, switchB
-		if link_distance[switchA][switchB] == None:
-			print link_distance[switchB][switchA]
-			return link_distance[switchB][switchA]
-		print link_distance[switchA][switchB]
-		return link_distance[switchA][switchB]
+		if rtt_info[switchA][switchB] == None:
+			print rtt_info[switchB][switchA]
+			return rtt_info[switchB][switchA]
+		print rtt_info[switchA][switchB]
+		return rtt_info[switchA][switchB]
 
-	def request_link_distance(self):
+	#request rtt_info from monitoring server
+	def request_rtt_info(self):
 		changed_to_dict = {}
-		for a in link_distance.keys():
+		for a in rtt_info.keys():
 			changed_to_dict[a]={}
-			for b, c in link_distance[a].items():
+			for b, c in rtt_info[a].items():
 				(changed_to_dict[a]).update({b:c})
 		return changed_to_dict
 
+#TODO
+	def request_bandwidth_info():
+		pass
+
+#TODO:
 	def show_registerd_slices(self):
 		# return to list of keys
 		return slice_map.keys()

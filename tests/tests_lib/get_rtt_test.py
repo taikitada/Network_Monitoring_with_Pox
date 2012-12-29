@@ -4,19 +4,31 @@ try :
     import unittest2 as unittest
 except (ImportError):
     import unittest
+import sys,os
+from os import path
 
-from lib import get_rtt
+CURRENT_DIR=path.dirname(os.path.abspath(__file__))
+LIB_DIR = "../../lib"
+sys.path.append(CURRENT_DIR+'/'+LIB_DIR)
+
+from get_rtt import get_rtt
 
 class Get_rttTestCase(unittest.TestCase):
 
     def setUp(self):
-        pass
+        self.dest_host = "localhost"
+        self.dest_host_fail = "localhost.fail"
 
     def tearDown(self):
-        pass
+        pass  
 
     def test_get_rtt(self):
-        pass
+        with self.assertRaises(IndexError):
+            get_rtt(self.dest_host_fail)
+        
+        self.result = get_rtt(self.dest_host)
+        self.assertEqual(type(self.result), float)
+
 
 if __name__ == "__main__":
     unittest.main()

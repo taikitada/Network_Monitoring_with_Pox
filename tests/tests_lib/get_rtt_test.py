@@ -8,8 +8,6 @@ import sys,os
 from os import path
 
 CURRENT_DIR=path.dirname(os.path.abspath(__file__))
-#LIB_DIR = "../../lib"
-#sys.path.append(CURRENT_DIR+'/'+LIB_DIR)
 sys.path.append(CURRENT_DIR + '/' + "../../")
 
 from lib.get_rtt import get_rtt
@@ -21,12 +19,12 @@ class Get_rttTestCase(unittest.TestCase):
         self.dest_host_fail = "localhost.fail"
 
     def tearDown(self):
-        pass  
+        pass
 
     def test_get_rtt(self):
         with self.assertRaises(IndexError):
             get_rtt(self.dest_host_fail)
-        
+
         self.result = get_rtt(self.dest_host)
         self.assertEqual(type(self.result), float)
 

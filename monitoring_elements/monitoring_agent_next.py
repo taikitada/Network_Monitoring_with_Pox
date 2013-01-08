@@ -22,7 +22,8 @@ class Monitoring_Agent:
 							ConfigDict['Monitoring_Server']['keyfile'])
 		self.conn = rpyc.ssh_connect(self.sshctx, ConfigDict['Monitoring_Server']['port'])
 		(self.conn).root.register_agent()
-	def ():
+	def exposed_get_rtt():
+		get_rtt
 		pass
 
 if __name__ == '__main__':

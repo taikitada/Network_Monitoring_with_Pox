@@ -16,7 +16,7 @@ agent_switch_map = {}
 
 class Monitoring_Server(rpyc.Service):
 	def exposed_register_agent(self, server_ip, server_port, switch_dpid):
-		agent_switch_map[switch_dpid] = (server_ip,server_port)
+		agent_switch_map[switch_dpid] = (server_ip, server_port)
 		print agent_switch_map
 		if switch_dpid not in link_distance.keys():
 			if link_distance.keys() == []:

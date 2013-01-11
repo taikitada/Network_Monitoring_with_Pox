@@ -30,7 +30,7 @@ if __name__ == '__main__':
 							ConfigDict['Monitoring_Server']['user'],
 							port = None,
 							keyfile = ConfigDict['Monitoring_Server']['keyfile'])
-	print self.sshctx
+	print sshctx
 	conn = rpyc.ssh_connect(sshctx, int(ConfigDict['Monitoring_Server']['port']))
 	print (conn).root.register_agent(ConfigDict['Monitoring_Agent']['host'],
 										ConfigDict['Monitoring_Agent']['port'], switch_dpid)

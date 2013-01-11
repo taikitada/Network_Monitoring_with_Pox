@@ -3,8 +3,13 @@ monitoring_server_next
 
 '''
 import rpyc
-import sys
 from collections import defaultdict
+import ConfigParser
+import sys,os
+from os import path
+
+CURRENT_DIR=path.dirname(os.path.abspath(__file__))
+sys.path.append(CURRENT_DIR + '/' + "../")
 
 # [k.dpid][j.dpid]->distance
 # overlapping is nothing
@@ -13,6 +18,10 @@ link_distance = defaultdict(lambda:defaultdict(lambda:None))
 
 # switch_dpid -> (agent_ip, agent_port)
 agent_switch_map = {}
+
+from lib.ConfigParserExtend import *
+CP = ConfigParserExtend("server.conf")
+ConfigDict = CP.ReturnConfigDict()
 
 class Monitoring_Server(rpyc.Service):
 	def exposed_register_agent(self, server_ip, server_port, switch_dpid):
@@ -41,8 +50,15 @@ class Monitoring_Server(rpyc.Service):
 				(changed_to_dict[a]).update({b:c})
 		return changed_to_dict
 
+	def on_connect(self):
+		print "made a connection with Monitoring_Server"
+
+	def on_disconnect(self):
+		print "A connection is dropped."
+
 
 if __name__ == '__main__':
 	from rpyc.utils.server import ThreadedServer
-	s = ThreadedServer(DoStuffService, port = 15555)
+	print int(ConfigDict['Monitoring_Server']['port'])
+	s = ThreadedServer(Monitoring_Server, port = int(ConfigDict['Monitoring_Server']['port']))
 	s.start()
